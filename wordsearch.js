@@ -1,48 +1,69 @@
-// Created by Jacqueline Smith, Kevin Chu, and Aqil Ebrahim 
-
-const wordSearch = (letters, word) => { 
-    const wordArray = []
-    const horizontalJoin = letters.map(ls => ls.join(''))
-    wordArray.push(horizontalJoin);
-    const verticalJoin = function(letters) {
-      
-        for (row = 0; row < letters[0].length; row++) {
-          let string = '';
-          for (column = 0; column < letters.length; column++) {
-            string += letters[column][row];
+const wordSearch = (letters, word) => {
+  //horizontal
+  let tf = false;
+  letters.forEach((item) => {
+      if (item.join("").includes(word)) {
+          tf = true;
+      }
+  });
+  //col
+  transpose(letters).forEach((item) => {
+      if (item.join("").includes(word)) {
+          tf = true;
+      }
+  });
+  //reverse horizontal
+  letters.forEach((item) => {
+      if (item.reverse().join("").includes(word)) {
+          tf = true;
+      }
+  });
+  //reverse col
+  transpose(letters).forEach((item) => {
+      if (item.reverse().join("").includes(word)) {
+          tf = true;
+      }
+  });
+  // search diagonally
+  const diagLeft = [];
+  let diagRight = [];
+  for (let rowIndex = 0; rowIndex < letters[0].length; rowIndex++) {
+      for (let colIndex = 0; colIndex < letters.length; colIndex++) {
+          if (!diagLeft[rowIndex + colIndex]) {
+              diagLeft[rowIndex + colIndex] = [];
           }
-          wordArray.push(string);
-        }
-    }
-    wordArray.push(verticalJoin(letters));
-    
-    console.log(wordArray)
-    
-    for (l of wordArray) {
-    
-        if (l.includes(word)) {
-             return true
-            } else {
-             return false;
-    };
-    
-    }
-}    
-
-console.log(wordSearch([
-    ['A', 'W', 'C', 'F', 'Q', 'U', 'A', 'L'],
-    ['S', 'E', 'I', 'N', 'F', 'E', 'L', 'D'],
-    ['Y', 'F', 'C', 'F', 'Q', 'U', 'A', 'L'],
-    ['H', 'M', 'J', 'T', 'E', 'V', 'R', 'G'],
-    ['W', 'H', 'C', 'S', 'Y', 'E', 'R', 'L'],
-    ['B', 'F', 'R', 'E', 'N', 'E', 'Y', 'B'],
-    ['U', 'B', 'T', 'W', 'A', 'P', 'A', 'I'],
-    ['O', 'D', 'C', 'A', 'K', 'U', 'A', 'S'],
-    ['E', 'Z', 'K', 'F', 'Q', 'U', 'A', 'L'],
-  ]));
-
-
-
-
-
+          if (!diagRight[rowIndex + colIndex]) {
+              diagRight[rowIndex + colIndex] = [];
+          }
+          diagLeft[rowIndex + colIndex].push(letters[colIndex][rowIndex]); //working
+          diagRight[rowIndex + colIndex].push(letters[colIndex][rowIndex]);
+          console.log(letters[colIndex][rowIndex]);
+      }
+  }
+  diagRight = diagRight.reverse();
+  console.log(diagRight);
+  return tf;
+};
+const transpose = function (matrix) {
+  let finalMatrix = [];
+  if (matrix.length === 0) {
+      return [];
+  }
+  for (let row = 0; row < matrix.length; row++) {
+      for (let col = 0; col < matrix[row].length; col++) {
+          if (!finalMatrix[col]) {
+              finalMatrix[col] = [];
+          }
+          finalMatrix[col].push(matrix[row][col]);
+      }
+  }
+  return finalMatrix;
+};
+const result = wordSearch([
+  ['1', '2', '3'],
+  ['4', '5', '6'],
+  ['7', '8', '9'],
+  ['10', '11', '12']
+], '159');
+// console.log(['S', 'E', 'I', 'N', 'F', 'E', 'L', 'D'].reverse());
 module.exports = wordSearch;
